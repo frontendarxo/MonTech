@@ -42,28 +42,31 @@ export function Hero() {
           </defs>
         </svg>
 
-        {/* Animated Stars/Particles */}
+        {/* Animated Stars/Particles — deterministic from index to avoid hydration mismatch */}
         <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              initial={{ 
-                x: Math.random() * 100 + "%", 
-                y: Math.random() * 100 + "%",
-                opacity: Math.random() 
-              }}
-              animate={{ 
-                opacity: [0.2, 0.8, 0.2],
-                scale: [1, 1.5, 1]
-              }}
-              transition={{ 
-                duration: 2 + Math.random() * 3, 
-                repeat: Infinity,
-                delay: Math.random() * 5
-              }}
-            />
-          ))}
+          {[...Array(20)].map((_, i) => {
+            const x = ((i * 17 + 13) % 100) + "%";
+            const y = ((i * 23 + 7) % 100) + "%";
+            const opacity = 0.2 + ((i % 5) / 5) * 0.6;
+            const duration = 2 + ((i % 10) / 10) * 3;
+            const delay = ((i % 20) / 20) * 5;
+            return (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 bg-white rounded-full"
+                initial={{ x, y, opacity }}
+                animate={{
+                  opacity: [0.2, 0.8, 0.2],
+                  scale: [1, 1.5, 1]
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  delay
+                }}
+              />
+            );
+          })}
         </div>
       </motion.div>
 
